@@ -32,21 +32,16 @@ public:
     MainWindow();
 
 private:
-    void OnMenuFileNewClick() {qDebug() << "MainMenu/File/New";}
     void OnMenuFileOpenClick();
-    void OnMenuFileSaveClick() {qDebug() << "MainMenu/File/Save";}
-    void OnMenuFileSaveAsClick() {qDebug() << "MainMenu/File/SaveAs";}
-    void OnMenuFileCloseClick() {qDebug() << "MainMenu/File/Close";}
-    void OnMenuEditUndoClick() {qDebug() << "MainMenu/Edit/Undo";}
-    void OnMenuEditRedoClick() {qDebug() << "MainMenu/Edit/Redo";}
-    void OnMenuEditCutClick() {qDebug() << "MainMenu/Edit/Cut";}
-    void OnMenuEditCopyClick() {qDebug() << "MainMenu/Edit/Copy";}
-    void OnMenuEditPasteClick() {qDebug() << "MainMenu/Edit/Paste";}
-    void OnMenuEditDeletaClick() {qDebug() << "MainMenu/Edit/delete";}
-    void OnMenuEditSelectAllClick() {qDebug() << "MainMenu/Edit/SelectAll";}
-    void OnMenuHelpAboutClick() {QMessageBox::about(this, "About", "MainMenu example.\nVersion 1.0.0\n\n@ 2020 by Gammasoft.");}
+
+    void OnMenuFileCloseClick() {close();}
+    void OnMenuCategoryCarsClick();
+    void OnMenuCategoryPedsClick();
+
+    void OnMenuHelpAboutClick() {QMessageBox::about(this, "About", "Grand Theft Auto 2 .sty file viewer. \nhttps://github.com/jonlachmann/gta2_sty_browser \nCreated by Jon Lachmann.");}
 
     QFrame frame;
+    Style styleFile;
     //QLabel label1 {&panel};
 };
 
