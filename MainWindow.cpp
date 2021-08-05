@@ -17,6 +17,8 @@ MainWindow::MainWindow() {
     menuEdit->addAction("&Peds", this, &MainWindow::OnMenuCategoryPedsClick, QKeySequence(Qt::CTRL + Qt::Key_2));
     menuEdit->addAction("&Code Objects", this, &MainWindow::OnMenuCategoryCodeObjClick, QKeySequence(Qt::CTRL + Qt::Key_3));
     menuEdit->addAction("&Map Objects", this, &MainWindow::OnMenuCategoryMapObjClick, QKeySequence(Qt::CTRL + Qt::Key_4));
+    menuEdit->addAction("&User Objects", this, &MainWindow::OnMenuCategoryUserClick, QKeySequence(Qt::CTRL + Qt::Key_5));
+    menuEdit->addAction("&Fonts", this, &MainWindow::OnMenuCategoryFontsClick, QKeySequence(Qt::CTRL + Qt::Key_6));
 
     QMenu* menuHelp = menuBar()->addMenu("&Help");
     menuHelp->addAction("&About", this, &MainWindow::OnMenuHelpAboutClick);
@@ -123,6 +125,17 @@ void MainWindow::OnMenuCategoryCarsClick() {
 }
 
 void MainWindow::setSprites(int category) {
+    if (spritesActive != -1) {
+        for (int i = 0; i < sprites[spritesActive].size(); i++) {
+            std::cout << i << std::endl;
+            hlayout1->removeWidget(sprites[spritesActive][i]);
+            hlayout2->removeWidget(sprites[spritesActive][i]);
+            hlayout3->removeWidget(sprites[spritesActive][i]);
+            sprites[spritesActive][i]->setParent(nullptr);
+            //scroll->layout()->removeWidget(sprites[i]);
+        }
+    }
+
     int perRow = sprites[category].size() / 3;
     for (int i = 0; i < perRow; i++) {
         hlayout1->addWidget(sprites[category][i]);
@@ -154,4 +167,12 @@ void MainWindow::OnMenuCategoryMapObjClick() {
 
 void MainWindow::OnMenuCategoryCodeObjClick() {
     setSprites(3);
+}
+
+void MainWindow::OnMenuCategoryUserClick() {
+    setSprites(4);
+}
+
+void MainWindow::OnMenuCategoryFontsClick() {
+    setSprites(5);
 }

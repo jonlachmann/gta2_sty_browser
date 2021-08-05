@@ -45,6 +45,8 @@ private:
     void OnMenuCategoryPedsClick();
     void OnMenuCategoryCodeObjClick();
     void OnMenuCategoryMapObjClick();
+    void OnMenuCategoryUserClick();
+    void OnMenuCategoryFontsClick();
 
     void OnMenuHelpAboutClick() {QMessageBox::about(this, "About", "Grand Theft Auto 2 .sty file viewer. \nhttps://github.com/jonlachmann/gta2_sty_browser \nCreated by Jon Lachmann.");}
 
