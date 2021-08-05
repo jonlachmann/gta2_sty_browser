@@ -117,13 +117,13 @@ sprite_base Style::readSpriteBase(SDL_RWops* file) {
     //std::cout << "cars:" << sprb.car << "peds:" << sprb.ped <<  "code_obj:" << sprb.code_obj << "map_obj:" << sprb.map_obj << "user:" << sprb.user << "font:" << sprb.font << std::endl;
 
     // Adjust indices to point at the first sprite of the type
-    sprb.font = sprb.user + sprb.map_obj + sprb.code_obj + sprb.ped + sprb.car;
+    /*sprb.font = sprb.user + sprb.map_obj + sprb.code_obj + sprb.ped + sprb.car;
     sprb.user = sprb.map_obj + sprb.code_obj + sprb.ped + sprb.car;
     sprb.map_obj = sprb.code_obj + sprb.ped + sprb.car;
     sprb.code_obj = sprb.ped + sprb.car;
     sprb.ped = sprb.car;
     sprb.car = 0;
-
+*/
     return sprb;
 }
 
@@ -545,4 +545,54 @@ physical_palette Style::getSpritePalette(int sprite, int type, int remap) {
     int virtualPalette = sprite + paletteBase.sprite + remap;
 
     return physicalPalettes[paletteIndex.phys_palette[virtualPalette]];
+}
+
+car_info Style::getCarInfo(int car) {
+    return carInfo[car];
+}
+
+int Style::getCarInfoSize() {
+    return carInfo.size();
+}
+
+sprite_base Style::getSpriteBase() {
+    return spriteBase;
+}
+
+std::tuple<int,int> Style::getSpriteBase(int base) {
+    int start = 0;
+    int length = 0;
+    switch (base) {
+        case 5:
+            start += spriteBase.user;
+        case 4:
+            start += spriteBase.map_obj;
+        case 3:
+            start += spriteBase.code_obj;
+        case 2:
+            start += spriteBase.ped;
+        case 1:
+            start += spriteBase.car;
+    }
+    switch (base) {
+        case 0:
+            length = spriteBase.car;
+            break;
+        case 1:
+            length = spriteBase.ped;
+            break;
+        case 2:
+            length = spriteBase.code_obj;
+            break;
+        case 3:
+            length = spriteBase.map_obj;
+            break;
+        case 4:
+            length = spriteBase.user;
+            break;
+        case 5:
+            length = spriteBase.font;
+    }
+
+    return std::tuple<int, int>{start, length};
 }

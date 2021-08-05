@@ -112,7 +112,6 @@ struct object_info {
     uint8_t sprites;
 };
 
-
 class Style {
 #define PALX 1481392464
 #define PPAL 1279348816
@@ -196,6 +195,10 @@ public:
     std::vector<sprite_entry> getSpriteIndex();
     std::vector<delta_atlas_entry> getDeltaAtlasIndex();
 
+    car_info getCarInfo(int car);
+    sprite_base getSpriteBase();
+    std::tuple<int,int> getSpriteBase(int base);
+
     int getFontSprite(char character, int font);
     int getCarSpriteId(int car);
     int getPedSpriteId(int skin, int sprite);
@@ -210,6 +213,7 @@ public:
     int drawSpritePage(int page, char filename[]);
     int drawPalettes(char filename[]);
 
+    int getCarInfoSize();
 };
 
 
