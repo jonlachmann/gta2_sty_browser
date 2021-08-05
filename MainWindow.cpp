@@ -20,6 +20,10 @@ MainWindow::MainWindow() {
     menuEdit->addAction("&User Objects", this, &MainWindow::OnMenuCategoryUserClick, QKeySequence(Qt::CTRL + Qt::Key_5));
     menuEdit->addAction("&Fonts", this, &MainWindow::OnMenuCategoryFontsClick, QKeySequence(Qt::CTRL + Qt::Key_6));
 
+    QMenu* menuActions = menuBar()->addMenu("&Actions");
+    menuActions->addAction("&Increase remap", this, &MainWindow::OnMenuActionsIncreaseRemap, QKeySequence(Qt::CTRL + Qt::Key_Plus));
+    menuActions->addAction("&Decrease remap", this, &MainWindow::OnMenuActionsDecreaseRemap, QKeySequence(Qt::CTRL + Qt::Key_Minus));
+
     QMenu* menuHelp = menuBar()->addMenu("&Help");
     menuHelp->addAction("&About", this, &MainWindow::OnMenuHelpAboutClick);
 
@@ -41,8 +45,6 @@ MainWindow::MainWindow() {
     scroll = new QScrollArea();
 
     scroll->setWidget(scrollLayoutW);
-    //scroll->setWidget(hlayout2W);
-    //scroll->setWidget(hlayout3W);
     scroll->setWidgetResizable(true);
 
     QWidget *window = new QWidget();
@@ -59,80 +61,61 @@ void MainWindow::OnMenuFileOpenClick() {
     std::cout << file1Name.toStdString() << std::endl;
 
     styleFile.load(file1Name.toStdString(), true);
-
-    for (int i = 0; i < 10; i++) {
-        QSprite sprite = QSprite(&styleFile);
-        sprite.setSprite(i);
-        QLabel *myLabel = new QLabel(this);
-        myLabel->setPixmap(QPixmap::fromImage(sprite.getImage()));
-        hlayout1->addWidget(myLabel);
-    }
 }
 
 void MainWindow::test() {
     styleFile.load("../../openGTA2/data/ste.sty", true);
 
-    std::cout << styleFile.spriteBase.car << std::endl;
-    std::cout << styleFile.spriteBase.ped << std::endl;
-    std::cout << unsigned(styleFile.getCarInfoSize()) << std::endl;
-
     // Load car sprites
     std::vector<QLabel*> carSprites;
+    std::vector<QSprite> spriteImageVec;
     int j = 0;
     for (int i = 0; i < styleFile.getCarInfoSize(); i++) {
         QSprite sprite = QSprite(&styleFile);
         std::cout << j << std::endl;
-        sprite.setSprite(j);
+        sprite.setSprite(j, 0);
         QLabel *spriteLabel = new QLabel(this);
         spriteLabel->setPixmap(QPixmap::fromImage(sprite.getImage()));
         carSprites.push_back(spriteLabel);
         j += styleFile.getCarInfo(i).sprite;
+        spriteImageVec.push_back(sprite);
     }
+    sprite_images.push_back(spriteImageVec);
     sprites.push_back(carSprites);
 
     // Load other sprites
     for (int i = 1; i < 6; i++) {
         std::tuple<int, int> base_length = styleFile.getSpriteBase(i);
-        std::cout << std::get<0>(base_length) << " - " << std::get<1>(base_length) << std::endl;
-        sprites.push_back(LoadSprites(std::get<0>(base_length), std::get<0>(base_length)+std::get<1>(base_length)));
+        LoadSprites(std::get<0>(base_length), std::get<0>(base_length)+std::get<1>(base_length), i);
     }
 }
 
-std::vector<QLabel*> MainWindow::LoadSprites(int base, int nextBase) {
+void MainWindow::LoadSprites(int base, int nextBase, int type) {
     std::vector<QLabel*> spriteVec;
+    std::vector<QSprite> spriteImageVec;
     for (int i = base; i < nextBase; i++) {
         QSprite sprite = QSprite(&styleFile);
-        sprite.setSprite(i);
+        sprite.setSprite(i, type);
         QLabel *spriteLabel = new QLabel(this);
         spriteLabel->setPixmap(QPixmap::fromImage(sprite.getImage()));
         spriteVec.push_back(spriteLabel);
+        spriteImageVec.push_back(sprite);
     }
-    return spriteVec;
-}
-
-void MainWindow::OnMenuCategoryCarsClick() {
-    QList<QWidget*> children = scroll->findChildren<QWidget*>();
-    qDebug() << children.size();
-    /*for (int i = 0; i < sprites_visible.size(); i++) {
-        if (sprites_visible[i]) {
-            std::cout << i << std::endl;
-            hlayout->removeWidget(sprites[i]);
-            //scroll->layout()->removeWidget(sprites[i]);
-        }
-    }*/
-
-    setSprites(0);
+    sprite_images.push_back(spriteImageVec);
+    sprites.push_back(spriteVec);
 }
 
 void MainWindow::setSprites(int category) {
     if (spritesActive != -1) {
         for (int i = 0; i < sprites[spritesActive].size(); i++) {
-            std::cout << i << std::endl;
             hlayout1->removeWidget(sprites[spritesActive][i]);
             hlayout2->removeWidget(sprites[spritesActive][i]);
             hlayout3->removeWidget(sprites[spritesActive][i]);
             sprites[spritesActive][i]->setParent(nullptr);
-            //scroll->layout()->removeWidget(sprites[i]);
+            if (remap != -1) {
+                sprite_images[spritesActive][i].setRemap(-1);
+                sprites[spritesActive][i]->setPixmap(QPixmap::fromImage(sprite_images[spritesActive][i].getImage()));
+            }
         }
     }
 
@@ -147,17 +130,14 @@ void MainWindow::setSprites(int category) {
         hlayout3->addWidget(sprites[category][i]);
     }
     spritesActive = category;
+    remap = -1;
+}
+
+void MainWindow::OnMenuCategoryCarsClick() {
+    setSprites(0);
 }
 
 void MainWindow::OnMenuCategoryPedsClick() {
-    /*QList<QWidget*> children = scroll->findChildren<QWidget*>();
-    qDebug() << children.size();
-    for (int i = 0; i < carSprites.size(); i++) {
-        std::cout << i << std::endl;
-        hlayout2->removeWidget(carSprites[i]);
-            //scroll->layout()->removeWidget(sprites[i]);
-    }*/
-
     setSprites(1);
 }
 
@@ -175,4 +155,18 @@ void MainWindow::OnMenuCategoryUserClick() {
 
 void MainWindow::OnMenuCategoryFontsClick() {
     setSprites(5);
+}
+
+void MainWindow::OnMenuActionsIncreaseRemap() {
+    remap++;
+    std::cout << "Remap: " << remap << std::endl;
+    for (int j = 0; j < sprites[spritesActive].size(); j++) {
+        sprite_images[spritesActive][j].setRemap(remap);
+        sprites[spritesActive][j]->setPixmap(QPixmap::fromImage(sprite_images[spritesActive][j].getImage()));
+    }
+}
+
+void MainWindow::OnMenuActionsDecreaseRemap() {
+    remap-=2;
+    MainWindow::OnMenuActionsIncreaseRemap();
 }

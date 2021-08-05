@@ -33,7 +33,9 @@ public:
     QHBoxLayout *hlayout2;
     QHBoxLayout *hlayout3;
     std::vector<std::vector<QLabel*>> sprites;
+    std::vector<std::vector<QSprite>> sprite_images;
     int spritesActive = -1; // -1 none, 0 car, 1 ped...
+    int remap = -1;
 
     MainWindow();
 
@@ -56,7 +58,10 @@ private:
 
     void setSprites(int sprites);
 
-    std::vector<QLabel *> LoadSprites(int base, int nextBase);
+    void LoadSprites(int base, int nextBase, int type);
+
+    void OnMenuActionsIncreaseRemap();
+    void OnMenuActionsDecreaseRemap();
 };
 
 

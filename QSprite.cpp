@@ -11,18 +11,14 @@ QImage QSprite::getImage() {
     return this->image;
 }
 
-void QSprite::setPalette(int palette) {
-    this->palette = palette;
-    rendered = false;
-}
-
-void QSprite::setSprite(int sprite) {
+void QSprite::setSprite(int sprite, int type) {
     this->sprite = sprite;
+    this->type = type;
     rendered = false;
 }
 
 void QSprite::renderImage() {
-    physicalPalette = style->getSpritePalette(this->sprite,1,0);
+    physicalPalette = style->getSpritePalette(this->sprite, type, remap);
     spriteEntry = style->getSpriteIndex()[this->sprite];
 
     image = QImage(spriteEntry.w, spriteEntry.h, QImage::Format_RGB32);
@@ -37,4 +33,9 @@ void QSprite::renderImage() {
         }
     }
     rendered = true;
+}
+
+void QSprite::setRemap(int remap) {
+    this->remap = remap;
+    rendered = false;
 }

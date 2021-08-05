@@ -21,7 +21,8 @@ private:
     int rendered = false;
 
     int sprite = 0;
-    int palette = 0;
+    int type;
+    int remap = -1;
 
     void renderImage();
 
@@ -31,9 +32,9 @@ public:
     void setStyle(Style* style);
     QImage getImage();
 
-    void setSprite(int sprite);
+    void setSprite(int sprite, int type);
 
-    void setPalette(int palette);
+    void setRemap(int remap);
 
 };
 

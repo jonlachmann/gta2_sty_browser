@@ -542,7 +542,18 @@ std::vector<uint8_t> Style::getSingleSpriteData(int sprite) {
 }
 
 physical_palette Style::getSpritePalette(int sprite, int type, int remap) {
-    int virtualPalette = sprite + paletteBase.sprite + remap;
+    int virtualPalette = sprite + paletteBase.sprite;
+    if (remap > -1) {
+        if (type == 0) {
+            if (carInfo[sprite].num_remaps > remap) {
+                virtualPalette = paletteBase.car_remap + carInfo[sprite].remap[remap];
+            } else {
+                virtualPalette = paletteBase.sprite + sprite;
+            }
+        } else if (type == 1) {
+            virtualPalette = paletteBase.ped_remap + remap;
+        } else virtualPalette = sprite + paletteBase.sprite + remap;
+    }
 
     return physicalPalettes[paletteIndex.phys_palette[virtualPalette]];
 }
