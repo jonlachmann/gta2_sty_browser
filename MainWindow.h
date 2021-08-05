@@ -62,6 +62,8 @@ private:
 
     void OnMenuActionsIncreaseRemap();
     void OnMenuActionsDecreaseRemap();
+
+    void LoadStyleFile(std::string file);
 };
 
 

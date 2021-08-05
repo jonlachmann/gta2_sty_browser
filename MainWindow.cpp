@@ -60,11 +60,13 @@ void MainWindow::OnMenuFileOpenClick() {
                                              tr("Open .sty File "), "~", tr("STY Files (*.sty)"));
     std::cout << file1Name.toStdString() << std::endl;
 
-    styleFile.load(file1Name.toStdString(), true);
+    LoadStyleFile(file1Name.toStdString());
 }
 
-void MainWindow::test() {
-    styleFile.load("../../openGTA2/data/ste.sty", true);
+void MainWindow::LoadStyleFile(std::string file) {
+    styleFile.load(file, true);
+    sprite_images.clear();
+    sprites.clear();
 
     // Load car sprites
     std::vector<QLabel*> carSprites;
@@ -88,6 +90,10 @@ void MainWindow::test() {
         std::tuple<int, int> base_length = styleFile.getSpriteBase(i);
         LoadSprites(std::get<0>(base_length), std::get<0>(base_length)+std::get<1>(base_length), i);
     }
+}
+
+void MainWindow::test() {
+    LoadStyleFile("../../openGTA2/data/ste.sty");
 }
 
 void MainWindow::LoadSprites(int base, int nextBase, int type) {
