@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.17)
 project(sty_browser)
 
 find_package(SDL2 REQUIRED)

@@ -64,6 +64,8 @@ private:
     void OnMenuActionsDecreaseRemap();
 
     void LoadStyleFile(std::string file);
+
+    void clearSprites();
 };
 
 

@@ -64,6 +64,7 @@ void MainWindow::OnMenuFileOpenClick() {
 }
 
 void MainWindow::LoadStyleFile(std::string file) {
+    clearSprites();
     styleFile.load(file, true);
     sprite_images.clear();
     sprites.clear();
@@ -111,7 +112,7 @@ void MainWindow::LoadSprites(int base, int nextBase, int type) {
     sprites.push_back(spriteVec);
 }
 
-void MainWindow::setSprites(int category) {
+void MainWindow::clearSprites() {
     if (spritesActive != -1) {
         for (int i = 0; i < sprites[spritesActive].size(); i++) {
             hlayout1->removeWidget(sprites[spritesActive][i]);
@@ -124,6 +125,10 @@ void MainWindow::setSprites(int category) {
             }
         }
     }
+}
+
+void MainWindow::setSprites(int category) {
+    clearSprites();
 
     int perRow = sprites[category].size() / 3;
     for (int i = 0; i < perRow; i++) {
